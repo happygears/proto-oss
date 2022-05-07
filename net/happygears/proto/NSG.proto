@@ -1,0 +1,603 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+package net.happygears.proto.nsg;
+option go_package = "net/happygears/proto/nsg";
+
+enum Protocol {
+    Unknown = 0;
+    STP_Off = 1;
+    Unknown_STP = 2;
+    STP = 3;
+    SSTP = 4;
+    RSTP = 5;
+    PVST = 6;
+    PVSTPlus = 7;
+    RapidPVST = 8;
+    MISTP = 9;
+    MISTP_PVSTPlus = 10;
+    MST = 11;
+    VPLS = 12;
+    OSPF = 13;
+    BGP4 = 14;
+    Azure = 15;
+}
+
+message Interface {
+
+    enum Role {
+        Unknown = 0;
+        RouterInterface = 1;
+        UntaggedSwtichPort = 2;
+        TaggedSwitchPort = 3;
+        OutOfBandManagement = 4;
+        VlanInterface = 5;
+        VirtualInterface = 6;
+        BroadcastTypeInterface = 7;
+        LoopbackInterface = 8;
+        SimulatedInterface = 9;
+        WLan = 10;
+        Internal = 11;   // e.g. unit 32767 on Juniper. Ignored while building L2 topology
+        Tunnel = 12;
+        PeeringInterface = 13;
+        OspfInterface = 14;
+        PhysicalPort = 15;         // opposite of VirtualInterface
+        Aggregator = 16;           // 802.3ad link aggregator ("bundle", "etherchannel", "port channel")
+        AggregationPort = 17;      // 802.3ad aggregation port (a member)
+        ParentOfAggregationPort = 18;      // special role for the physical interface that is a parent of an aggregation port on Juniper
+        MLAGAggregator = 19;
+        MLAGAggregationPort = 20;
+        eBgpPeer = 21;
+        iBgpPeer = 22;
+        NSGAggregate = 23;         // aggregated cluster "interfaces"
+        SimulatedTunnelEndPointInterface = 24;   // simulated interface added by tunnel discovery on devices where tunnels
+        // are not terminated on individual "tun" interfaces (e.g. Cisco ASA)
+        VLTUplink = 25;
+        RedundancyInterface = 26;   // virtual interface created to represent NSRP protocol on Netscreen devices.
+        // Other platform may have something similar too, e.g. JuniperSRX has reth
+        Ieee80211 = 27;
+        OTN = 28;
+        CloudNetworkInterface = 29;
+    }
+
+    int32 ID = 1;
+    int32 index = 2;
+    string description = 3;
+    int32 administrative_status = 4;
+    int32 operational_status = 5;
+    string physical_address = 6;
+    int64 speed = 7;
+    int32 type = 8;
+    string alias = 9;
+    string name = 10;
+    int64 high_speed = 11;  // TODO(colin): consider folding speed and high_speed together somehow?
+    repeated Role roles = 12;
+    repeated string tags = 13;
+    repeated string addresses = 14;
+    map <string, string> AT_physical_address = 15;
+    map <string, string> AT_network_address = 16;
+    repeated int32 cos_queues = 17;
+    // TODO(colin)
+    // These two are troublesome: their default values are -1, and the
+    // protobuf default of 0 makes it appear that these are set. We will
+    // probably need to add some "has" variables here to disambiguate the
+    // cases.
+    int32 real_RFC1213_index = 18;
+    int32 alternate_index = 19;
+}
+
+enum DataType {
+    DT_Unknown = 0;
+    DT_Counter = 1;
+    DT_Counter64 = 2;
+    DT_Gauge = 3;
+    DT_TimeTick = 4;
+    DT_Int = 5;
+    DT_Unsigned = 6;
+    DT_Double = 7;
+    DT_String = 8;
+    DT_HexString = 9;
+}
+
+message Component {
+    enum Class {
+        cc_unused = 0;
+        cc_other = 1;
+        cc_unknown = 2;
+        cc_chassis = 3;
+        cc_backplane = 4;
+        cc_container = 5;
+        cc_powerSupply = 6;
+        cc_fan = 7;
+        cc_sensor = 8;
+        cc_module = 9;
+        cc_port = 10;
+        cc_stack = 11;
+        cc_cpu = 12;
+        cc_opticalTransceiver = 13;
+        cc_chassisAlarm = 14;
+        cc_pdu = 15;
+        cc_disk = 16;
+        cc_memory = 17;
+        cc_counter = 18;
+        cc_virtServer = 19;
+        cc_serverPool = 20;
+        cc_tunnel = 21;
+        cc_protocol = 22;
+        cc_lbNode = 23;
+        cc_fru = 24;
+    }
+
+    enum SensorDataType {
+        dt_unknown = 0;
+        dt_other = 1;
+        dt_voltsAC = 3;
+        dt_voltsDC = 4;
+        dt_amperes = 5;
+        dt_watts = 6;
+        dt_hertz = 7;
+        dt_celsius = 8;
+        dt_percentRH = 9;
+        dt_rpm = 10;
+        dt_cmm = 11;
+        dt_truthValue = 12;
+        dt_specialEnum = 13;
+        dt_dbm = 14;
+    }
+
+    enum AlarmType {
+        at_unknown = 0;
+        at_minor = 1;
+        at_major = 2;
+    }
+
+    string name = 1;
+    string OID = 2;
+    Class component_class = 3;
+    DataType data_type = 4;
+    string description = 5;
+    string monitoring_variable_hint = 6;
+    string model_name = 7;
+    string capabilities = 8;
+    int64 index = 9;
+    SensorDataType sensor_data_type = 10;
+    double sensor_data_scale = 11;
+    int32 sensor_precision = 12;
+    string container_OID = 13;
+    string container_name = 14;
+    string serial_number = 15;
+    repeated string tags = 16;
+
+    int32 port = 17;
+    string server_pool_name = 18;
+    bool enabled = 19;
+    string encoded_OID_subindex = 20;
+
+    int32 tunnel_index = 21;
+    string local_gateway_address = 22;
+    string remote_gateway_address = 23;
+    string in_traffic_OID_index = 24;
+    string out_traffic_OID_index = 25;
+    string operational_status_OID_index = 26;
+
+    AlarmType alarm_type = 27;
+
+    string address = 28;
+    bool tunnel_is_interface = 29;
+    string subtype = 30; // used to distingish MPLS from IPSEC tunnels, for example
+
+    Protocol protocol = 31;  // for ProtocolDescriptor
+    repeated string vservers = 32;  // for ServerPool
+
+    map<string, AzureResourceMetricDefinition> azure_metric_definitions = 33;
+    string azure_resource_definition = 34;
+}
+
+message Channel {
+    string name = 1;
+    string type = 2;
+    int32 version = 3;
+    string context = 4;
+}
+
+enum DiscoveryState {
+    ds_unknown = 0;
+    ds_pending = 1;
+    ds_running = 2;
+    ds_aborted = 3;
+    ds_complete = 4;
+}
+
+message Device {
+
+    enum Role {
+        dr_unknown = 0;
+        dr_simulated_node = 1;
+        dr_simulated_bridge = 2;
+        dr_router = 3;
+        dr_switch = 4;
+        dr_server = 5;
+        dr_load_balancer = 6;
+        dr_wireless_client = 7;
+        dr_wireless_ap = 8;
+        dr_firewall = 9;
+        dr_ebgp_peer = 10;
+        dr_ibgp_peer = 11;
+        dr_vm_server = 12;
+        dr_vm = 13;
+        dr_virtual_switch = 14;
+        dr_ephemeral_node = 15;
+        dr_netspyglass_server = 16;
+        dr_cluster = 17;
+        dr_pdu = 18;
+        dr_vpn_concentrator = 19;
+        dr_cloud_vm = 20;
+        dr_cloud_lb = 21;
+        dr_cloud_vnet = 22;
+        dr_cloud_subnet = 23;
+    }
+
+    int32 ID = 1;
+    string name = 2;
+    string address = 3;
+    string sys_description = 4;
+    string product_name = 5;
+    string chassis_ID = 6;
+    string box_description = 7;
+    string software_revision = 8;
+    string system_name = 9;
+    string reverse_DNS_name = 10;
+    string short_name = 11;
+    int32 interface_number = 12;
+    string SNMP_engine_ID = 13;
+    string unit_address = 14;
+    bool is_IP_forwarding = 15;
+    bool answers_to_SNMP = 17;
+    bool responds_to_ping = 18;
+    repeated string tags = 19;
+    repeated Protocol protocols = 20;
+
+    map <int32, Interface> interfaces = 21;
+    map <int64, Component> virtual_servers = 22;
+    map <int64, Component> server_pools = 23;
+    repeated Component hardware_components = 24;
+    repeated Component ephemeral_components = 25;
+    map <int32, Component> ipsec_tunnels = 26;
+    repeated Component protocol_descriptors = 27;
+    repeated Component chassis_alarms = 28;
+    map <int64, Component> firewall_counters = 29;
+    map <int64, Component> load_balancers = 30;
+    map <int32, Component> MPLS_tunnels = 31;
+    map <int32, string> cos_fc_name = 32;
+    map <int32, int32> cos_fc_queue_number = 33;
+
+    bool ip_CIDR_route_number_supported = 34;
+    bool inet_CIDR_route_number_supported = 35;
+    bool ipv6_route_number_supported = 36;
+
+    bool ISIS_on = 40;
+    string ISIS_sys_id = 41;
+    map <int32, int32> ISIS_circuit_if_index = 42;
+    map <int32, int32> ISIS_circuit_level1_metric = 43;
+    map <int32, int32> ISIS_circuit_level2_metric = 44;
+
+    int32 OSPF_admin_status = 50;
+    string OSPF_router_id = 51;
+    map <int32, int32> OSPF_area_status = 52;
+    map <int32, int32> OSPF_if_area_id = 53;
+    map <int32, int32> OSPF_if_state = 54;
+
+    map <int64, Component> azure_resources = 55;
+
+    map <string, bool> OID_support = 70;
+
+    google.protobuf.Timestamp updated_at = 101;
+    google.protobuf.Timestamp last_contact_time = 102;
+
+    string name_from_config = 110;  // NetworkNode.getName() combines this with system_name and reverse_dns
+    string sys_contact = 111;
+    string sys_location = 112;
+
+    repeated string polling_configurations = 120;
+    Channel channel = 121;
+
+    int32 generation = 132;
+    string signature = 133;
+    string sys_object_id = 134;
+
+    google.protobuf.Timestamp last_discovery_attempt_time = 141;
+    google.protobuf.Timestamp last_successful_discovery_time = 142;
+    google.protobuf.Timestamp uptime_at_time_of_discovery = 143;
+    DiscoveryState discovery_state = 144;
+
+    map <int32, string> vlan_names = 151;
+
+    repeated Role roles = 161;
+
+    string tags_script_signature = 170;  // I expect this to go away when we switch to the new Python infrastructure
+}
+
+message NetworkEdge {
+    int32 source = 1;
+    int32 source_interface = 2;
+    int32 destination = 3;
+    int32 destination_interface = 4;
+}
+
+message NetworkConnectivity {
+    repeated NetworkEdge incoming = 1;
+    repeated NetworkEdge outgoing = 2;
+}
+
+message NetworkTopology {
+    map <int32 /* device_ID */, NetworkConnectivity> graph = 1;
+}
+
+enum DataSource {
+    DS_Unknown = 0;
+    DS_Interface = 1;
+    DS_AclCounter = 2;
+    DS_ChassisAlarm = 3;
+    DS_ProtocolDescriptor = 4;
+    DS_MplsTunnel = 5;
+    DS_GenericHardwareComponent = 6;
+    DS_IpsecTunnel = 7;
+    DS_EphemeralComponent = 8;
+    DS_VirtualServer = 9;
+    DS_ServerPool = 10;
+    DS_NetworkDevice = 11;
+    DS_NetSpyGlassServer = 12;
+    DS_FirewallCounter = 13;
+    DS_LbNode = 14;
+    DS_VpnControlConnection = 15;
+    DS_AzureResourceMetric = 16;
+}
+
+message PollingVariable {
+    int64 index = 1;
+    string component_name = 2;
+    Component.Class component_class = 3;
+    bool is_interface = 4;
+    string OID = 5;
+    bool SNMP_walk = 6;
+    DataType data_type = 7;
+    double sensor_scale = 8;
+    repeated string tags = 9;
+    string subtype = 10;
+}
+
+message Variable {
+    string name = 1;
+    string component = 2;
+    int32 device_ID = 3;
+    int64 index = 4;
+
+    string OID = 5;
+    DataType data_type = 6;
+    DataSource data_source = 7;
+    double sensor_scale = 8;
+
+    repeated string tags = 9;
+
+    bool polling_variable = 10;
+    bool string_type = 11;
+    bool compute_type = 12;
+    bool python_type = 13;
+    bool alert_type = 14;
+
+    repeated google.protobuf.Timestamp timestamps = 15;
+    repeated double double_values = 16;
+    repeated string string_values = 17;
+
+    string device = 18;
+
+    google.protobuf.Timestamp updated_at = 19;
+    google.protobuf.Timestamp computed_at = 20;
+}
+
+message LogRecord {
+    string name = 1;
+    string level = 2;
+    string path_name = 3;
+    int32 line_number = 4;
+    string message = 5;
+    google.protobuf.Timestamp timestamp = 6;
+}
+
+message PollingVariables {
+    repeated PollingVariable variables = 1;
+}
+
+message PollingVariableMap {
+    map <string, PollingVariables> polling_variables = 1;
+
+    repeated LogRecord log_records = 99;
+}
+
+message KeyedTagList {
+    repeated string tags = 1;
+    bool is_interface = 2;
+    Component.Class component_class = 3;
+    int64 index = 4;
+    string monitoring_variable_hint = 5;
+}
+
+message TagUpdate {
+    repeated KeyedTagList added = 1;
+    repeated KeyedTagList removed = 2;
+
+    repeated LogRecord log_records = 99;
+}
+
+message DeviceIDs {
+    repeated int32 device_ID = 1;
+}
+
+message AssignTagsRequest {
+    Device device = 1;
+    string assigner = 3;
+}
+
+message BuildVariablesRequest {
+    Device device = 1;
+    string builder = 2;
+}
+
+message GetConnectedDeviceRequest {
+    int32 device_ID = 1;
+    int32 interface_index = 2;
+}
+
+message ConnectedDevice {
+    Device device = 1;
+    int32 interface_index = 2;
+}
+
+// AssignViewsRequest is one of a stream of messages that is called at view assignment time. The first message
+// in the stream will contain the assigner, which is a reference to a Python module.classname containing the
+// user implementation of tag assignment. The remaining messages contain serialized devices. The Python executor
+// will construct the view objects, and then pass each device to the view match functions. The results are
+// accumulated in the ViewAssignment object.
+message AssignViewsRequest {
+    string assigner = 1;  // Valid only on first item in request stream.
+    Device device = 2;    // Valid only in second and subsequent items in request stream.
+}
+
+// Each view created by the user view assignment class produces one of these objects containing the view
+// parameters and a list of devices which are members of that view.
+message ViewAssignment {
+    string name = 1;
+    string parent = 2;
+    bool connecting_devices = 3;
+    bool adjacent_devices = 4;
+    bool hidden = 5;
+    repeated int32 device_ID = 10;
+}
+
+message ViewAssignments {
+    repeated ViewAssignment view_assignment = 1;
+
+    repeated LogRecord log_records = 99;
+}
+
+message EvaluationContext {
+    int32 cycle_number = 1;
+    google.protobuf.Timestamp cycle_timestamp = 2;
+    google.protobuf.Duration polling_interval = 3;
+    repeated string roles = 4;
+}
+
+message VariableQuery {
+    string query = 1;
+    google.protobuf.Duration duration = 2;
+    EvaluationContext context = 3;
+}
+
+message ExportVariableRequest {
+    EvaluationContext context = 1;
+    string name = 2;
+    repeated Variable variables = 3;
+}
+
+message NewVariableRequest {
+    EvaluationContext context = 1;
+    string device_name = 2;
+    string component_name = 3;
+    string description = 4;
+}
+
+message FindVariableRequest {
+    EvaluationContext context = 1;
+    string name = 2;
+    int32 device_ID = 3;
+    int64 index = 4;
+}
+
+message ExecuteRulesRequest {
+    EvaluationContext context = 1;
+    string module_class = 2;
+}
+
+message RuleExecutionResult {
+    repeated LogRecord log_records = 99;
+}
+
+message AlertLink {
+    string label = 1;
+    string icon = 2;
+    string url = 3;
+}
+
+message Alert {
+    string key = 1;
+    string name = 2;
+    string description = 3;
+    bool active = 4;
+    int32 device_ID = 5;
+    string device_name = 6;
+    int64 index = 7;
+    bool fanout = 8;
+    string component_name = 9;
+    Variable alert_variable = 10;
+    repeated AlertLink links = 11;
+    repeated Variable values = 12;
+    map <string, string> details = 13;
+    google.protobuf.Duration duration = 14;
+    double percentage = 15;
+    double percentage_observed = 16;
+    repeated string tags = 17;
+    google.protobuf.Timestamp active_since = 18;
+    google.protobuf.Duration notification_interval = 19;
+    google.protobuf.Timestamp updated = 20;
+    bool silenced = 22;
+    int32 matching_silence_ID = 23;
+    repeated string streams = 24;
+    string server = 25;
+    bool notification_sent = 26;
+    google.protobuf.Timestamp last_notification_sent = 27;
+}
+
+message FireAlertRequest {
+    repeated Alert alerts = 1;
+    EvaluationContext context = 2;
+}
+
+message AzureResourceMetricDefinition {
+    string id = 1;
+    string name = 2;
+    string namespace = 3;
+    string unit = 4;
+    string description = 5;
+    string primary_aggregation_type = 6;
+    repeated string available_intervals = 7;
+    repeated string available_aggregations = 8;
+}
+
+service PyExec {
+    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct);
+    rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct);
+    rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap);
+    rpc AssignTags(AssignTagsRequest) returns (TagUpdate);
+    rpc AssignViews(stream AssignViewsRequest) returns (ViewAssignments);
+    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult);
+}
+
+// TODO: rename this to NSGService
+service Service {
+    rpc GetDeviceIDs(google.protobuf.Empty) returns (DeviceIDs);
+    rpc GetDevices(DeviceIDs) returns (stream Device);
+    rpc GetDeviceByID(google.protobuf.Int32Value) returns (Device);
+    rpc GetDeviceByAddress(google.protobuf.StringValue) returns (Device);
+    rpc GetDeviceByName(google.protobuf.StringValue) returns (Device);
+    rpc GetConnectedDevice(GetConnectedDeviceRequest) returns (ConnectedDevice);
+    rpc Query(VariableQuery) returns (stream Variable);
+    rpc GetEvaluationContext(google.protobuf.Empty) returns (EvaluationContext);
+    rpc ExportVariable(ExportVariableRequest) returns (google.protobuf.Empty);
+    rpc NewVariable(NewVariableRequest) returns (Variable);
+    rpc FindVariable(FindVariableRequest) returns (Variable);
+    rpc FireAlert(FireAlertRequest) returns (google.protobuf.Empty);
+}
