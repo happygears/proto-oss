@@ -419,6 +419,7 @@ message PollingVariableMap {
 }
 
 message KeyedTagList {
+    option deprecated = true;
     repeated string tags = 1;
     bool is_interface = 2;
     Component.Class component_class = 3;
@@ -427,6 +428,7 @@ message KeyedTagList {
 }
 
 message TagUpdate {
+    option deprecated = true;
     repeated KeyedTagList added = 1;
     repeated KeyedTagList removed = 2;
 
@@ -438,6 +440,7 @@ message DeviceIDs {
 }
 
 message AssignTagsRequest {
+    option deprecated = true;
     Device device = 1;
     string assigner = 3;
 }
@@ -463,6 +466,7 @@ message ConnectedDevice {
 // will construct the view objects, and then pass each device to the view match functions. The results are
 // accumulated in the ViewAssignment object.
 message AssignViewsRequest {
+    option deprecated = true;
     string assigner = 1;  // Valid only on first item in request stream.
     Device device = 2;    // Valid only in second and subsequent items in request stream.
 }
@@ -470,6 +474,7 @@ message AssignViewsRequest {
 // Each view created by the user view assignment class produces one of these objects containing the view
 // parameters and a list of devices which are members of that view.
 message ViewAssignment {
+    option deprecated = true;
     string name = 1;
     string parent = 2;
     bool connecting_devices = 3;
@@ -479,6 +484,7 @@ message ViewAssignment {
 }
 
 message ViewAssignments {
+    option deprecated = true;
     repeated ViewAssignment view_assignment = 1;
 
     repeated LogRecord log_records = 99;
@@ -579,12 +585,12 @@ message AzureResourceMetricDefinition {
 
 // TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
 service PyExec {
-    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct);
-    rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct);
-    rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap);
-    rpc AssignTags(AssignTagsRequest) returns (TagUpdate);
-    rpc AssignViews(stream AssignViewsRequest) returns (ViewAssignments);
-    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult);
+    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
+    rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
+    rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap) { option deprecated = true; };
+    rpc AssignTags(AssignTagsRequest) returns (TagUpdate) { option deprecated = true; };
+    rpc AssignViews(stream AssignViewsRequest) returns (ViewAssignments)  { option deprecated = true; };
+    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult) { option deprecated = true; };
 }
 
 // TODO: rename this to NSGService
