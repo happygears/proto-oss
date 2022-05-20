@@ -577,6 +577,7 @@ message AzureResourceMetricDefinition {
     repeated string available_aggregations = 8;
 }
 
+// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
 service PyExec {
     rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct);
     rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct);
