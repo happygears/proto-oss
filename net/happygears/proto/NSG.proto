@@ -413,6 +413,8 @@ message PollingVariables {
 }
 
 message PollingVariableMap {
+    option deprecated = true;
+
     map <string, PollingVariables> polling_variables = 1;
 
     repeated LogRecord log_records = 99;
@@ -446,16 +448,19 @@ message AssignTagsRequest {
 }
 
 message BuildVariablesRequest {
+    option deprecated = true;
     Device device = 1;
     string builder = 2;
 }
 
 message GetConnectedDeviceRequest {
+    option deprecated = true;
     int32 device_ID = 1;
     int32 interface_index = 2;
 }
 
 message ConnectedDevice {
+    option deprecated = true;
     Device device = 1;
     int32 interface_index = 2;
 }
@@ -524,11 +529,13 @@ message FindVariableRequest {
 }
 
 message ExecuteRulesRequest {
+    option deprecated = true;
     EvaluationContext context = 1;
     string module_class = 2;
 }
 
 message RuleExecutionResult {
+    option deprecated = true;
     repeated LogRecord log_records = 99;
 }
 
@@ -585,6 +592,7 @@ message AzureResourceMetricDefinition {
 
 // TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
 service PyExec {
+    option deprecated = true;
     rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
     rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
     rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap) { option deprecated = true; };
@@ -593,8 +601,9 @@ service PyExec {
     rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult) { option deprecated = true; };
 }
 
-// TODO: rename this to NSGService
+// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
 service Service {
+    option deprecated = true;
     rpc GetDeviceIDs(google.protobuf.Empty) returns (DeviceIDs);
     rpc GetDevices(DeviceIDs) returns (stream Device);
     rpc GetDeviceByID(google.protobuf.Int32Value) returns (Device);
