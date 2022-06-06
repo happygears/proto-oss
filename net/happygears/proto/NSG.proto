@@ -292,6 +292,7 @@ message Device {
     map <int32, int32> OSPF_if_state = 54;
 
     map <int64, Component> azure_resources = 55;
+    map <int64, Component> vpn_control_connections = 56;
 
     map <string, bool> OID_support = 70;
 
