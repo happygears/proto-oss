@@ -239,6 +239,7 @@ message Device {
         dr_cloud_lb = 21;
         dr_cloud_vnet = 22;
         dr_cloud_subnet = 23;
+        dr_cloud_vnet_gw = 24;
     }
 
     int32 ID = 1;
