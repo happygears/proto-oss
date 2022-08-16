@@ -25,6 +25,7 @@ enum Protocol {
     OSPF = 13;
     BGP4 = 14;
     Azure = 15;
+    AWS = 16;
 }
 
 message Interface {
@@ -195,6 +196,9 @@ message Component {
 
     map<string, AzureResourceMetricDefinition> azure_metric_definitions = 33;
     string azure_resource_definition = 34;
+
+    map<string, AwsResourceMetricDefinition> aws_metric_definitions = 35;
+    string aws_resource_definition = 36;
 }
 
 message Channel {
@@ -294,6 +298,7 @@ message Device {
 
     map <int64, Component> azure_resources = 55;
     map <int64, Component> vpn_control_connections = 56;
+    map <int64, Component> aws_resources = 57;
 
     map <string, bool> OID_support = 70;
 
@@ -357,6 +362,7 @@ enum DataSource {
     DS_LbNode = 14;
     DS_VpnControlConnection = 15;
     DS_AzureResourceMetric = 16;
+    DS_AwsResourceMetric = 17;
 }
 
 message PollingVariable {
@@ -582,6 +588,17 @@ message FireAlertRequest {
 }
 
 message AzureResourceMetricDefinition {
+    string id = 1;
+    string name = 2;
+    string namespace = 3;
+    string unit = 4;
+    string description = 5;
+    string primary_aggregation_type = 6;
+    repeated string available_intervals = 7;
+    repeated string available_aggregations = 8;
+}
+
+message AwsResourceMetricDefinition {
     string id = 1;
     string name = 2;
     string namespace = 3;
