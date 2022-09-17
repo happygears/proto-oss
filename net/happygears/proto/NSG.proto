@@ -405,6 +405,11 @@ message Variable {
 
     google.protobuf.Timestamp updated_at = 19;
     google.protobuf.Timestamp computed_at = 20;
+
+    string description = 21;
+    string container = 22;
+
+    bytes hash = 100;
 }
 
 message LogRecord {
