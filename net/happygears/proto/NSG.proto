@@ -409,7 +409,7 @@ message Variable {
     string description = 21;
     string container = 22;
 
-    bytes hash = 100;
+    int64 hash = 100;
 }
 
 message LogRecord {
