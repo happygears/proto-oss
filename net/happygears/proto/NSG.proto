@@ -63,6 +63,7 @@ message Interface {
         Ieee80211 = 27;
         OTN = 28;
         CloudNetworkInterface = 29;
+        BridgeDomain = 30;
     }
 
     int32 ID = 1;
