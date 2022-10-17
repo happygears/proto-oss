@@ -199,7 +199,7 @@ message Component {
     string azure_resource_definition = 34;
 
     map<string, AwsResourceMetricDefinition> aws_metric_definitions = 35;
-    string aws_resource_definition = 36;
+    optional string aws_resource_definition = 36;
 }
 
 message Channel {
@@ -608,11 +608,9 @@ message AwsResourceMetricDefinition {
     string id = 1;
     string name = 2;
     string namespace = 3;
-    string unit = 4;
-    string description = 5;
-    string primary_aggregation_type = 6;
-    repeated string available_intervals = 7;
-    repeated string available_aggregations = 8;
+    string query = 9;
+    string region = 10;
+    map<string, string> dimensions = 11;
 }
 
 // TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
