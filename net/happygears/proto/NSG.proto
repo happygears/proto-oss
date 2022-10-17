@@ -199,7 +199,7 @@ message Component {
     string azure_resource_definition = 34;
 
     map<string, AwsResourceMetricDefinition> aws_metric_definitions = 35;
-    optional string aws_resource_definition = 36;
+    string aws_resource_definition = 36;
 }
 
 message Channel {
