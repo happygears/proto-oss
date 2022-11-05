@@ -435,21 +435,26 @@ message PollingVariableMap {
 }
 
 message KeyedTagList {
-    option deprecated = true;
     repeated string tags = 1;
-    bool is_interface = 2;
-    Component.Class component_class = 3;
-    int64 index = 4;
-    string monitoring_variable_hint = 5;
+    bool is_device = 2;
+    bool is_interface = 3;
+    DataSource ds = 4;
+    int64 index = 5;
+    string monitoring_variable_hint = 6;
 }
 
-message TagUpdate {
-    option deprecated = true;
+message TagUpdateJournalV2 {
     repeated KeyedTagList added = 1;
     repeated KeyedTagList removed = 2;
-
-    repeated LogRecord log_records = 99;
 }
+
+//message TagUpdate {
+//    option deprecated = true;
+//    repeated KeyedTagList added = 1;
+//    repeated KeyedTagList removed = 2;
+//
+//    repeated LogRecord log_records = 99;
+//}
 
 message DeviceIDs {
     repeated int32 device_ID = 1;
@@ -613,16 +618,16 @@ message AwsResourceMetricDefinition {
     map<string, string> dimensions = 11;
 }
 
-// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
-service PyExec {
-    option deprecated = true;
-    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
-    rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
-    rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap) { option deprecated = true; };
-    rpc AssignTags(AssignTagsRequest) returns (TagUpdate) { option deprecated = true; };
-    rpc AssignViews(stream AssignViewsRequest) returns (ViewAssignments)  { option deprecated = true; };
-    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult) { option deprecated = true; };
-}
+//// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
+//service PyExec {
+//    option deprecated = true;
+//    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
+//    rpc Reload(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
+//    rpc BuildVariables(BuildVariablesRequest) returns (PollingVariableMap) { option deprecated = true; };
+//    rpc AssignTags(AssignTagsRequest) returns (TagUpdate) { option deprecated = true; };
+//    rpc AssignViews(stream AssignViewsRequest) returns (ViewAssignments)  { option deprecated = true; };
+//    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult) { option deprecated = true; };
+//}
 
 // TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
 service Service {
