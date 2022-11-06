@@ -410,6 +410,8 @@ message Variable {
     string description = 21;
     string container = 22;
 
+    nsg.TagUpdateJournalV2 tag_update_journal = 23;
+
     int64 hash = 100;
 }
 
