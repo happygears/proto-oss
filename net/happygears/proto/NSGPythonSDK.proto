@@ -3,9 +3,16 @@ syntax = "proto3";
 package net.happygears.proto.nsg_python_sdk;
 import "net/happygears/proto/NSG.proto";
 
+enum ProcessState {
+  initializing = 0;
+  ready = 1;
+  failed = 2;
+}
+
 message ServiceInfo {
   string script = 1;
   string port = 2;
+  ProcessState state = 3;
 }
 
 message StatusResp {
@@ -16,42 +23,8 @@ message TagsAppRequest {
   nsg.Device device = 1;
 }
 
-message KeyedTagList {
-  repeated string tags = 1;
-  bool is_device = 2;
-  bool is_interface = 3;
-  nsg.DataSource ds = 4;
-  int64 index = 5;
-  string monitoring_variable_hint = 6;
-}
-
-message TagUpdateJournal {
-  repeated KeyedTagList added = 1;
-  repeated KeyedTagList removed = 2;
-}
-
 message VariablesAppRequest {
   nsg.Device device = 1;
-}
-
-message PollingVariable {
-  int64 index = 1;
-  string component_name = 2;
-  nsg.Component.Class component_class = 3;  // cc_backplane, cc_chassis, cc_powerSupply etc. Not really used
-  string OID = 4;
-  bool SNMP_walk = 5;            // if true, then OID is used to do snmp walk, otherwise we do SNMP get
-  nsg.DataType data_type = 6;    // counter, counter64, gauge etc.
-  nsg.DataSource dsc = 7;        // DS_Interface, DS_AclCounter, DS_ChassisAlarm etc: used to find correct component by index
-  double sensor_scale = 8;
-  repeated string tags = 9;
-}
-
-message PollingVariables {
-  repeated PollingVariable variables = 1;
-}
-
-message PollingVariableMap {
-  map <string, PollingVariables> polling_variables = 1;
 }
 
 service Lifecycle {
@@ -59,6 +32,6 @@ service Lifecycle {
 }
 
 service AppRequest {
-  rpc Tags(TagsAppRequest) returns (TagUpdateJournal);
-  rpc Variables(VariablesAppRequest) returns (PollingVariableMap);
+  rpc Tags(TagsAppRequest) returns (nsg.TagUpdateJournalV2);
+  rpc Variables(VariablesAppRequest) returns (nsg.PollingVariableMap);
 }

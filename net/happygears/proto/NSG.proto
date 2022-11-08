@@ -370,13 +370,13 @@ message PollingVariable {
     int64 index = 1;
     string component_name = 2;
     Component.Class component_class = 3;
-    bool is_interface = 4;
-    string OID = 5;
-    bool SNMP_walk = 6;
-    DataType data_type = 7;
+    string OID = 4;
+    bool SNMP_walk = 5;
+    DataType data_type = 6;
+    DataSource dsc = 7;
     double sensor_scale = 8;
     repeated string tags = 9;
-    string subtype = 10;
+    string metric_name = 10; // Metric name for cloud devices
 }
 
 message Variable {
@@ -427,11 +427,7 @@ message PollingVariables {
 }
 
 message PollingVariableMap {
-    option deprecated = true;
-
     map <string, PollingVariables> polling_variables = 1;
-
-    repeated LogRecord log_records = 99;
 }
 
 message KeyedTagList {
