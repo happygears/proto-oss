@@ -27,6 +27,10 @@ message VariablesAppRequest {
   nsg.Device device = 1;
 }
 
+message ViewsAppRequest {
+  nsg.Device device = 1;
+}
+
 service Lifecycle {
   rpc Heartbeat(ServiceInfo) returns (StatusResp);
 }
@@ -34,4 +38,5 @@ service Lifecycle {
 service AppRequest {
   rpc Tags(TagsAppRequest) returns (nsg.TagUpdateJournalV2);
   rpc Variables(VariablesAppRequest) returns (nsg.PollingVariableMap);
+  rpc Views(ViewsAppRequest) returns (nsg.ViewAssignments);
 }

@@ -494,7 +494,6 @@ message AssignViewsRequest {
 // Each view created by the user view assignment class produces one of these objects containing the view
 // parameters and a list of devices which are members of that view.
 message ViewAssignment {
-    option deprecated = true;
     string name = 1;
     string parent = 2;
     bool connecting_devices = 3;
@@ -504,7 +503,6 @@ message ViewAssignment {
 }
 
 message ViewAssignments {
-    option deprecated = true;
     repeated ViewAssignment view_assignment = 1;
 
     repeated LogRecord log_records = 99;
