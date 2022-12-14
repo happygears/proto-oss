@@ -556,6 +556,31 @@ message PutVariableResponse {
     repeated PutVariableStatus status = 2;
 }
 
+message GetOrCreateDeviceRequest {
+    string network = 1;    // this is used when we generate device ID using uuid, its name and network name, esp. in nsgcentral
+    int32 device_ID = 2;
+    string uuid = 3;
+    string name = 4;
+    string address = 5;
+    repeated nsg.Device.Role roles = 6;
+    repeated string tags = 7;
+    repeated string channels = 8;
+    string chassisId = 9;
+    // optionally the server can add ephemeral component with this name
+    // component is added if it does not exist both when we find existing device or create new one
+    string component = 10;
+    string origin = 100;   // name of the server that sent request
+}
+
+message GetOrCreateDeviceResponse {
+    nsg.Device device = 1;
+    bool created = 2;               // if true, we have created device object; if false, we have found existing one
+    // if GetOrCreateDeviceRequest.component was not blank, this is corresponding
+    // component DataSource type and index. These two bits of information allow us find the component unambiguously
+    nsg.DataSource data_source = 3;
+    int64 index = 4;
+}
+
 message EvaluationContext {
     int32 cycle_number = 1;
     google.protobuf.Timestamp cycle_timestamp = 2;
