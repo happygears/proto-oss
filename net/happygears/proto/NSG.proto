@@ -514,6 +514,48 @@ message ViewAssignments {
     repeated LogRecord log_records = 99;
 }
 
+message NsgQLDataStreamRequest {
+    int64 id = 1;                                    // request id of corresponding GenericPythonAppRequest
+    int32 cycle_number = 2;
+    google.protobuf.Timestamp cycle_timestamp = 3;
+    int32 batch_size = 4;
+    string nsgql = 5;
+    // if start_time and end_time are undefined, this means we request only latest observations
+    google.protobuf.Timestamp start_time = 20;
+    google.protobuf.Timestamp end_time = 21;
+}
+
+message NsgQLDataStreamResponse {
+    repeated nsg.Variable variables = 1;
+}
+
+message VariableWithTagJournal {
+    nsg.Variable variable = 1;                       // this includes updated time series (repeated double double_values)
+    nsg.TagUpdateJournalV2 tag_update_journal = 2;   // variable's local tags to add and remove (these are not device/component tags)
+}
+
+message PutVariableRequest {
+    string originator = 1;                           // name of nsg-python-gw that makes request
+    int64 id = 2;                                    // request id of corresponding GenericPythonAppRequest
+    string sender_role = 3;
+    repeated VariableWithTagJournal variables = 4;
+}
+
+message PutVariableStatus {
+    enum Status {
+        OK = 0;                  // success
+        DEVICE_NOT_FOUND = 1;
+        OTHER_ERROR = 100;
+    }
+    Status status = 1;
+    string triplet = 2;
+}
+
+message PutVariableResponse {
+    int64 id = 1;                                    // id from corresponding PutVariableRequest
+    repeated PutVariableStatus status = 2;
+}
+
 message EvaluationContext {
     int32 cycle_number = 1;
     google.protobuf.Timestamp cycle_timestamp = 2;
