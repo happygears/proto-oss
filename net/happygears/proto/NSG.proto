@@ -518,8 +518,9 @@ message NsgQLDataStreamRequest {
     int64 id = 1;                                    // request id of corresponding GenericPythonAppRequest
     int32 cycle_number = 2;
     google.protobuf.Timestamp cycle_timestamp = 3;
-    int32 batch_size = 4;
-    string nsgql = 5;
+    int32 batch_size = 4;  // calls using this request message can return response as a stream of batched NSG.Variable messages
+    string nsgql = 5;      // NsgQL query used to find matching variables
+    bool with_tags = 6;    // if true, include variable tags as part of NSG.Variable message sent with response
     // if start_time and end_time are undefined, this means we request only latest observations
     google.protobuf.Timestamp start_time = 20;
     google.protobuf.Timestamp end_time = 21;
