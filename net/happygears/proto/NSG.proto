@@ -540,6 +540,9 @@ message PutVariableRequest {
     int64 id = 2;                                    // request id of corresponding GenericPythonAppRequest
     string sender_role = 3;
     repeated VariableWithTagJournal variables = 4;
+    // if persist=true, datapool (or nsg-aggregator at this time) should also save to Postgres and ES; otherwise
+    // it only stores variables in memory
+    bool persist = 5;
 }
 
 message PutVariableStatus {
