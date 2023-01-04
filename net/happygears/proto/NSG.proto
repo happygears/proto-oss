@@ -508,6 +508,77 @@ message ViewAssignments {
     repeated LogRecord log_records = 99;
 }
 
+message NsgQLDataStreamRequest {
+    int64 id = 1;                                    // request id of corresponding GenericPythonAppRequest
+    int32 cycle_number = 2;
+    google.protobuf.Timestamp cycle_timestamp = 3;
+    int32 batch_size = 4;  // calls using this request message can return response as a stream of batched NSG.Variable messages
+    string nsgql = 5;      // NsgQL query used to find matching variables
+    bool with_tags = 6;    // if true, include variable tags as part of NSG.Variable message sent with response
+    // if start_time and end_time are undefined, this means we request only latest observations
+    google.protobuf.Timestamp start_time = 20;
+    google.protobuf.Timestamp end_time = 21;
+}
+
+message NsgQLDataStreamResponse {
+    repeated nsg.Variable variables = 1;
+}
+
+message VariableWithTagJournal {
+    nsg.Variable variable = 1;                       // this includes updated time series (repeated double double_values)
+    nsg.TagUpdateJournalV2 tag_update_journal = 2;   // variable's local tags to add and remove (these are not device/component tags)
+}
+
+message PutVariableRequest {
+    string originator = 1;                           // name of nsg-python-gw that makes request
+    int64 id = 2;                                    // request id of corresponding GenericPythonAppRequest
+    string sender_role = 3;
+    repeated VariableWithTagJournal variables = 4;
+    // if persist=true, datapool (or nsg-aggregator at this time) should also save to Postgres and ES; otherwise
+    // it only stores variables in memory
+    bool persist = 5;
+}
+
+message PutVariableStatus {
+    enum Status {
+        OK = 0;                  // success
+        DEVICE_NOT_FOUND = 1;
+        OTHER_ERROR = 100;
+    }
+    Status status = 1;
+    string triplet = 2;
+}
+
+message PutVariableResponse {
+    int64 id = 1;                                    // id from corresponding PutVariableRequest
+    repeated PutVariableStatus status = 2;
+}
+
+message GetOrCreateDeviceRequest {
+    string network = 1;    // this is used when we generate device ID using uuid, its name and network name, esp. in nsgcentral
+    int32 device_ID = 2;
+    string uuid = 3;
+    string name = 4;
+    string address = 5;
+    repeated nsg.Device.Role roles = 6;
+    repeated string tags = 7;
+    repeated string channels = 8;
+    string chassisId = 9;
+    // optionally the server can add ephemeral component with this name
+    // component is added if it does not exist both when we find existing device or create new one
+    string component = 10;
+    string origin = 100;   // name of the server that sent request
+}
+
+message GetOrCreateDeviceResponse {
+    nsg.Device device = 1;
+    bool created = 2;               // if true, we have created device object; if false, we have found existing one
+    // if GetOrCreateDeviceRequest.component was not blank, this is corresponding
+    // component DataSource type and index. These two bits of information allow us find the component unambiguously
+    nsg.DataSource data_source = 3;
+    int64 index = 4;
+}
+
 message EvaluationContext {
     int32 cycle_number = 1;
     google.protobuf.Timestamp cycle_timestamp = 2;
