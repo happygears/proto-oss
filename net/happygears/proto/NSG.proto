@@ -689,7 +689,7 @@ message AwsResourceMetricDefinition {
     map<string, string> dimensions = 11;
 }
 
-//// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
+//// NET-6657 this service goes away entirely when we switch to nsg-python-gw
 //service PyExec {
 //    option deprecated = true;
 //    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Struct) { option deprecated = true; };
@@ -700,19 +700,19 @@ message AwsResourceMetricDefinition {
 //    rpc ExecuteRules(ExecuteRulesRequest) returns (RuleExecutionResult) { option deprecated = true; };
 //}
 
-// TODO: NET-6657 this service goes away entirely when we switch to nsg-python-gw
-service Service {
-    option deprecated = true;
-    rpc GetDeviceIDs(google.protobuf.Empty) returns (DeviceIDs);
-    rpc GetDevices(DeviceIDs) returns (stream Device);
-    rpc GetDeviceByID(google.protobuf.Int32Value) returns (Device);
-    rpc GetDeviceByAddress(google.protobuf.StringValue) returns (Device);
-    rpc GetDeviceByName(google.protobuf.StringValue) returns (Device);
-    rpc GetConnectedDevice(GetConnectedDeviceRequest) returns (ConnectedDevice);
-    rpc Query(VariableQuery) returns (stream Variable);
-    rpc GetEvaluationContext(google.protobuf.Empty) returns (EvaluationContext);
-    rpc ExportVariable(ExportVariableRequest) returns (google.protobuf.Empty);
-    rpc NewVariable(NewVariableRequest) returns (Variable);
-    rpc FindVariable(FindVariableRequest) returns (Variable);
-    rpc FireAlert(FireAlertRequest) returns (google.protobuf.Empty);
-}
+//// NET-6657 this service goes away entirely when we switch to nsg-python-gw
+//service Service {
+//    option deprecated = true;
+//    rpc GetDeviceIDs(google.protobuf.Empty) returns (DeviceIDs);
+//    rpc GetDevices(DeviceIDs) returns (stream Device);
+//    rpc GetDeviceByID(google.protobuf.Int32Value) returns (Device);
+//    rpc GetDeviceByAddress(google.protobuf.StringValue) returns (Device);
+//    rpc GetDeviceByName(google.protobuf.StringValue) returns (Device);
+//    rpc GetConnectedDevice(GetConnectedDeviceRequest) returns (ConnectedDevice);
+//    rpc Query(VariableQuery) returns (stream Variable);
+//    rpc GetEvaluationContext(google.protobuf.Empty) returns (EvaluationContext);
+//    rpc ExportVariable(ExportVariableRequest) returns (google.protobuf.Empty);
+//    rpc NewVariable(NewVariableRequest) returns (Variable);
+//    rpc FindVariable(FindVariableRequest) returns (Variable);
+//    rpc FireAlert(FireAlertRequest) returns (google.protobuf.Empty);
+//}
