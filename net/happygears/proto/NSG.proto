@@ -521,9 +521,17 @@ message NsgQLDataStreamRequest {
     int32 batch_size = 4;  // calls using this request message can return response as a stream of batched NSG.Variable messages
     string nsgql = 5;      // NsgQL query used to find matching variables
     bool with_tags = 6;    // if true, include variable tags as part of NSG.Variable message sent with response
+    // fields start_time, end_time and duration are used to control time series returned with
+    // time series of each matching variable. This controls number of observations and their timestamps.
     // if start_time and end_time are undefined, this means we request only latest observations
     google.protobuf.Timestamp start_time = 20;
     google.protobuf.Timestamp end_time = 21;
+    // alternative way to define time interval when start_time and end_time are undefined.
+    // duration is assumed to always end "now"
+    google.protobuf.Duration duration = 22;
+    // another way to specify the size of time series that should be returned. This is always
+    // the end (that is, portion that ends "now")
+    int32 time_series_size = 23;
 }
 
 message NsgQLDataStreamResponse {
