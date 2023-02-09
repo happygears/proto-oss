@@ -643,11 +643,17 @@ message AlertLink {
     string url = 3;
 }
 
+enum AlertState {
+    CLEARED = 0;
+    ACTIVE = 1;
+    INSENSITIVE = 2;    // when we do not have enough time series data to compute alert correctly
+}
+
 message Alert {
     string key = 1;
     string name = 2;
     string description = 3;
-    bool active = 4;
+    bool active = 4 [ deprecated = true ];
     int32 device_ID = 5;
     string device_name = 6;
     int64 index = 7;
@@ -670,6 +676,7 @@ message Alert {
     string server = 25;
     bool notification_sent = 26;
     google.protobuf.Timestamp last_notification_sent = 27;
+    AlertState state = 28;
 }
 
 message FireAlertRequest {
