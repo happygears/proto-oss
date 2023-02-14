@@ -677,6 +677,8 @@ message Alert {
     bool notification_sent = 26;
     google.protobuf.Timestamp last_notification_sent = 27;
     AlertState state = 28;
+
+    int32 cycle_number = 100;   // cycle on which compute of the alert was requested
 }
 
 message FireAlertRequest {
