@@ -217,6 +217,16 @@ enum DiscoveryState {
     ds_complete = 4;
 }
 
+enum DiscoveryClass {
+    UNKNOWN     = 0;
+    SNMP        = 1;
+    API_AZURE   = 2;
+    API_AWS     = 3;
+    GNMI        = 4;
+    API_MERAKI  = 5;
+    API_MIST    = 6;
+}
+
 message Device {
 
     enum Role {
@@ -321,6 +331,7 @@ message Device {
     google.protobuf.Timestamp last_successful_discovery_time = 142;
     google.protobuf.Timestamp uptime_at_time_of_discovery = 143;
     DiscoveryState discovery_state = 144;
+    DiscoveryClass discovery_class = 145;
 
     map <int32, string> vlan_names = 151;
 
