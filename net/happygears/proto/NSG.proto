@@ -592,6 +592,7 @@ message GetOrCreateDeviceRequest {
     // optionally the server can add ephemeral component with this name
     // component is added if it does not exist both when we find existing device or create new one
     string component = 10;
+    DiscoveryClass discovery_class = 11;
     string origin = 100;   // name of the server that sent request
 }
 
