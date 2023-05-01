@@ -82,7 +82,10 @@ message Interface {
     repeated string addresses = 14;
     map <string, string> AT_physical_address = 15;
     map <string, string> AT_network_address = 16;
+
+    // numbers of QoS queues configured on the interface
     repeated int32 cos_queues = 17;
+
     // TODO(colin)
     // These two are troublesome: their default values are -1, and the
     // protobuf default of 0 makes it appear that these are set. We will
@@ -90,6 +93,15 @@ message Interface {
     // cases.
     int32 real_RFC1213_index = 18;
     int32 alternate_index = 19;
+
+    // NET-7278
+    // On cisco, association between QoS queues configured on the interface and device-global
+    // configuration of forwarding classes requires two 32-bit unsigned integers
+    // (cbQosPolicyIndex , cbQosObjectsIndex). Keys in this map are queue numbers and values
+    // are pairs (cbQosPolicyIndex , cbQosObjectsIndex) stored as a dot-separated string
+    //
+    map <int32, string> cos_queue_index = 20;
+
 }
 
 enum DataType {
@@ -294,16 +306,6 @@ message Device {
     bool ip_CIDR_route_number_supported = 34;
     bool inet_CIDR_route_number_supported = 35;
     bool ipv6_route_number_supported = 36;
-
-    // NET-7278
-    // On cisco, association between QoS queues configured on the interface and device-global
-    // configuration of forwarding classes requires two 32-bit unsigned integers
-    // (cbQosPolicyIndex , cbQosObjectsIndex). The key in cos_queue_number_queue_index
-    // is queue number (the same as the value in cos_fc_queue_number) and the value is
-    // pair (cbQosPolicyIndex , cbQosObjectsIndex). I use string to accommodate for
-    // possible future cases where the value might consist of more than a couple of numbers.
-    //
-    map <int32, string> cos_queue_number_queue_index = 37;
 
     bool ISIS_on = 40;
     string ISIS_sys_id = 41;
