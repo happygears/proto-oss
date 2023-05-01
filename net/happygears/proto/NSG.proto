@@ -90,15 +90,6 @@ message Interface {
     // cases.
     int32 real_RFC1213_index = 18;
     int32 alternate_index = 19;
-
-    // NET-7278
-    // On cisco, association between QoS queues configured on the interface and device-global
-    // configuration of forwarding classes requires two 32-bit unsigned integers
-    // (cbQosPolicyIndex , cbQosObjectsIndex) so I can not use cos_queues which is a list of int32.
-    // I do not want to change the type of cos_queues because that will break backward compatibility.
-    // The new field can hold two unsigned32 packed into one uint64
-    //
-    repeated uint64 cos_queues_64 = 20;
 }
 
 enum DataType {
@@ -304,16 +295,15 @@ message Device {
     bool inet_CIDR_route_number_supported = 35;
     bool ipv6_route_number_supported = 36;
 
-
     // NET-7278
     // On cisco, association between QoS queues configured on the interface and device-global
     // configuration of forwarding classes requires two 32-bit unsigned integers
-    // (cbQosPolicyIndex , cbQosObjectsIndex). The key in cos_fc_queue_number_64
-    // is cbQosConfigIndex (unsigned32) and the value is  (cbQosPolicyIndex , cbQosObjectsIndex)
-    // packed into uint64.  cos_fc_name defined above can still be used because the key is
-    // cbQosConfigIndex which is unsigned32.
+    // (cbQosPolicyIndex , cbQosObjectsIndex). The key in cos_queue_number_queue_index
+    // is queue number (the same as the value in cos_fc_queue_number) and the value is
+    // pair (cbQosPolicyIndex , cbQosObjectsIndex). I use string to accommodate for
+    // possible future cases where the value might consist of more than a couple of numbers.
     //
-    map <int32, uint64> cos_fc_queue_number_64 = 37;
+    map <int32, string> cos_queue_number_queue_index = 37;
 
     bool ISIS_on = 40;
     string ISIS_sys_id = 41;
