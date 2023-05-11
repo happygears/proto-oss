@@ -325,6 +325,8 @@ message Device {
 
     map <string, bool> OID_support = 70;
 
+    string region = 71;
+
     google.protobuf.Timestamp updated_at = 101;
     google.protobuf.Timestamp last_contact_time = 102;
 
