@@ -683,7 +683,7 @@ enum AlertClearActionType {
 
 message AlertClearAction {
     AlertClearActionType type = 1;
-    int64 close_after_epoch_ms = 2;
+    google.protobuf.Timestamp close_after = 2;
 }
 
 message Alert {
