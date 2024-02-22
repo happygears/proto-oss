@@ -675,6 +675,17 @@ enum AlertState {
     INSENSITIVE = 2;    // when we do not have enough time series data to compute alert correctly
 }
 
+enum AlertClearActionType {
+    NONE = 0;
+    CLOSE_IMMEDIATELY = 1;
+    CLOSE_AFTER = 2;
+}
+
+message AlertClearAction {
+    AlertClearActionType type = 1;
+    int64 close_after_epoch_ms = 2;
+}
+
 message Alert {
     string key = 1;
     string name = 2;
@@ -703,6 +714,8 @@ message Alert {
     bool notification_sent = 26;
     google.protobuf.Timestamp last_notification_sent = 27;
     AlertState state = 28;
+    AlertClearAction action = 29; // declare the action to be executed by nsg-alert-streams
+                                  // on 3rd party ticket-tracking service (like PagerDuty) when alert is cleared
 
     int32 cycle_number = 100;   // cycle on which compute of the alert was requested
 }
