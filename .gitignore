@@ -1,0 +1,7 @@
+.#*
+
+# generated RPC stubs; do not check in 
+*.java
+*.go
+NSG_*.py
+__pycache__/
