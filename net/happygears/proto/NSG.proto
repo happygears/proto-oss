@@ -237,6 +237,7 @@ enum DiscoveryClass {
     GNMI        = 4;
     API_MERAKI  = 5;
     API_MIST    = 6;
+    OTEL        = 7;   // for devices created from OpenTelemetry data
 }
 
 message Device {
