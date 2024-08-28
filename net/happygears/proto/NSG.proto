@@ -268,6 +268,7 @@ message Device {
         dr_cloud_vnet = 22;
         dr_cloud_subnet = 23;
         dr_cloud_vnet_gw = 24;
+        dr_open_telemetry_resource = 25;
     }
 
     int32 ID = 1;
