@@ -461,6 +461,15 @@ message PollingVariableMap {
     repeated LogRecord log_records = 99;
 }
 
+message KeyedTags {
+    repeated string tags            = 1;
+    int32 device_ID                 = 2;
+    nsg.DataSource ds               = 3;
+    int64 comp_index                = 4;
+    string monitoring_variable_hint = 5;
+}
+
+// TODO: migrate to KeyedTags
 message KeyedTagList {
     repeated string tags = 1;
     bool is_device = 2;
