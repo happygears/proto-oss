@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package net.happygears.proto.nsg_python_sdk;
+import "net/happygears/proto/NSG.proto";
+
+enum ProcessState {
+  initializing = 0;
+  ready = 1;
+  failed = 2;
+}
+
+message ServiceInfo {
+  string script = 1;
+  string port = 2;
+  ProcessState state = 3;
+}
+
+message StatusResp {
+  string status = 1;
+}
+
+message TagsAppRequest {
+  nsg.Device device = 1;
+}
+
+message VariablesAppRequest {
+  nsg.Device device = 1;
+}
+
+message ViewsAppRequest {
+  nsg.Device device = 1;
+}
+
+service Lifecycle {
+  rpc Heartbeat(ServiceInfo) returns (StatusResp);
+}
+
+service AppRequest {
+  rpc Tags(TagsAppRequest) returns (nsg.TagUpdateJournalV2);
+  rpc Variables(VariablesAppRequest) returns (nsg.PollingVariableMap);
+  rpc Views(ViewsAppRequest) returns (nsg.ViewAssignments);
+}
