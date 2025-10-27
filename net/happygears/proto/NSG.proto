@@ -64,6 +64,7 @@ message Interface {
         OTN = 28;
         CloudNetworkInterface = 29;
         BridgeDomain = 30;
+        VXLan = 31;  // VXLan interface on platforms that create one, e.g. Arista, Aruba, Cisco Nexus, Linux/Cumulus
     }
 
     int32 ID = 1;
