@@ -150,6 +150,10 @@ message Component {
     enum SensorDataType {
         dt_unknown = 0;
         dt_other = 1;
+        // ENTITY-SENSOR-MIB defines "2" as "unknown".
+        // Typically, protobuf enum has `unknown` as the first item with value 0. So I have two "unknowns" in this enum.
+        // I can't drop 2 because devices actually return this value
+        dt_unknown2 = 2;
         dt_voltsAC = 3;
         dt_voltsDC = 4;
         dt_amperes = 5;
