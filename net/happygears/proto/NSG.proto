@@ -314,6 +314,8 @@ message Device {
     bool inet_CIDR_route_number_supported = 35;
     bool ipv6_route_number_supported = 36;
 
+    map<string, int32> vrf_state = 37;
+
     bool ISIS_on = 40;
     string ISIS_sys_id = 41;
     map <int32, int32> ISIS_circuit_if_index = 42;
